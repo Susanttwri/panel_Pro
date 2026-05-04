@@ -41,9 +41,9 @@
                 {{ $products->links() }}
             </div>
         @else
-            <div style="text-align: center; padding: 60px 20px; color: #64748b;">
-                <i class="fas fa-box-open" style="font-size: 48px; margin-bottom: 16px; color: rgba(139,92,246,0.3);"></i>
-                <h3 style="color: #94a3b8; margin-bottom: 8px;">No Products Found</h3>
+            <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
+                <i class="fas fa-box-open" style="font-size: 40px; margin-bottom: 12px; color: #d1d5db;"></i>
+                <h3 style="color: #6b7280; margin-bottom: 6px;">No Products Found</h3>
                 <p>Check back soon for amazing products!</p>
             </div>
         @endif

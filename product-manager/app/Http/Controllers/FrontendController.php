@@ -43,7 +43,7 @@ class FrontendController extends Controller
         $relatedProducts = Product::where('is_active', true)
             ->where('id', '!=', $product->id)
             ->inRandomOrder()
-            ->take(4)
+            ->take(3)
             ->get();
 
         return view('frontend.product-detail', compact('product', 'relatedProducts'));
