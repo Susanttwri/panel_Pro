@@ -26,8 +26,8 @@
         .hero p{font-size:17px;color:#6b7280;line-height:1.7;margin-bottom:32px}
         .hero-buttons{display:flex;gap:12px;justify-content:center}
         .btn-hero{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:all .15s}
-        .btn-hero-primary{background:#111827;color:#fff}
-        .btn-hero-primary:hover{background:#1f2937}
+        .btn-hero-primary{background:#111827;color:#fff;box-shadow:0 4px 14px rgba(17, 24, 39, 0.25);transition:all .3s ease;}
+        .btn-hero-primary:hover{background:#1f2937;transform:translateY(-2px);box-shadow:0 6px 20px rgba(17, 24, 39, 0.35);}
         .btn-hero-outline{background:#fff;color:#374151;border:1px solid #d1d5db}
         .btn-hero-outline:hover{background:#f9fafb;border-color:#9ca3af}
         .section{padding:80px 40px;max-width:1200px;margin:0 auto}
@@ -35,10 +35,11 @@
         .section-header h2{font-size:28px;font-weight:700;margin-bottom:8px;color:#111827}
         .section-header p{font-size:15px;color:#6b7280}
         .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
-        .product-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;transition:all .2s;text-decoration:none;color:inherit;display:block}
-        .product-card:hover{border-color:#d1d5db;box-shadow:0 4px 24px rgba(0,0,0,.06)}
-        .product-card-img{width:100%;height:200px;background:#f9fafb;display:flex;align-items:center;justify-content:center;overflow:hidden}
-        .product-card-img img{width:100%;height:100%;object-fit:cover}
+        .product-card{background:#fff;border:1px solid #f3f4f6;border-radius:16px;overflow:hidden;transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);text-decoration:none;color:inherit;display:block; position:relative;}
+        .product-card:hover{transform:translateY(-8px);border-color:#e5e7eb;box-shadow:0 20px 40px rgba(0,0,0,.08);z-index:2;}
+        .product-card-img{width:100%;height:200px;background:#f9fafb;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+        .product-card-img img{width:100%;height:100%;object-fit:cover;transition:all .5s cubic-bezier(0.4, 0, 0.2, 1);}
+        .product-card:hover .product-card-img img{transform:scale(1.05);}
         .product-card-img .placeholder-icon{font-size:40px;color:#d1d5db}
         .product-card-body{padding:16px 20px 20px}
         .product-card-body h3{font-size:15px;font-weight:600;color:#111827;margin-bottom:6px}
@@ -95,5 +96,14 @@
         </div>
     </nav>
     @yield('content')
+
+    <footer style="margin-top:auto; padding:40px; text-align:center; border-top:1px solid #e5e7eb; color:#6b7280; font-size:14px; background:#f9fafb; transition:all .3s;">
+        <div style="display:flex; justify-content:center; gap:24px; margin-bottom:16px; font-size:18px;">
+            <a href="#" style="color:#9ca3af; text-decoration:none; transition:color 0.2s;"><i class="fab fa-twitter hover:text-gray-900"></i></a>
+            <a href="#" style="color:#9ca3af; text-decoration:none; transition:color 0.2s;"><i class="fab fa-github hover:text-gray-900"></i></a>
+            <a href="#" style="color:#9ca3af; text-decoration:none; transition:color 0.2s;"><i class="fab fa-instagram hover:text-gray-900"></i></a>
+        </div>
+        <p>&copy; {{ date('Y') }} PanelsPro. All rights reserved.</p>
+    </footer>
 </body>
 </html>
