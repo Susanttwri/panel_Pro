@@ -227,13 +227,6 @@
             <div class="auth-title">Welcome Back</div>
             <div class="auth-sub">Login to your Student or Admin account</div>
             
-            <button class="btn-google" onclick="alert('Google Sign-in triggered! This would securely log you in via OAuth.')">
-                <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google">
-                Sign in with Google
-            </button>
-            
-            <div class="auth-divider">or continue with email</div>
-            
             <form action="{{ route('admin.login') }}" method="POST">
                 @csrf
                 <input type="email" name="email" class="auth-input" placeholder="Email address" required>
