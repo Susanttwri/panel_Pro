@@ -19,8 +19,8 @@ jobs:
         run: |
           echo "Automated daily contribution on $(date)" >> .github/daily-contribution-log.txt
           
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
+          git config --local user.email "tiwarisusant706@gmail.com"
+          git config --local user.name "Susant Tiwari"
           
           git add .github/daily-contribution-log.txt
           git commit -m "Automated daily contribution update"
