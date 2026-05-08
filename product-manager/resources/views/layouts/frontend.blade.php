@@ -109,15 +109,49 @@
         .footer-links a:hover { color: var(--text); }
         .footer-bottom { max-width: 1300px; margin: 28px auto 0; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--muted); }
 
-        /* ANIMATIONS */
+        /* ANIMATIONS & INTERACTIVE EFFECTS */
         @keyframes fadeInUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-        .animate-in { animation: fadeInUp .6s ease forwards; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(0,0,0, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0,0,0, 0); } 100% { box-shadow: 0 0 0 0 rgba(0,0,0, 0); } }
+        
+        .animate-in { animation: fadeInUp .6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .delay-1 { animation-delay: .1s; opacity: 0; }
         .delay-2 { animation-delay: .2s; opacity: 0; }
         .delay-3 { animation-delay: .3s; opacity: 0; }
+        
+        .floating { animation: float 6s ease-in-out infinite; }
 
         /* DIVIDER */
         .gradient-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,.1), transparent); margin: 0; }
+
+        /* AUTH MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .auth-modal { background: var(--card); width: 100%; max-width: 420px; border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); border: 1px solid var(--border); transform: translateY(30px) scale(0.95); transition: all .4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; }
+        .modal-overlay.active .auth-modal { transform: translateY(0) scale(1); }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 20px; color: var(--muted); cursor: pointer; transition: color .2s; }
+        .modal-close:hover { color: var(--text); }
+        .auth-title { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .auth-sub { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 32px; }
+        
+        .btn-google { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px; border-radius: 12px; background: white; border: 1px solid #d1d5db; color: #374151; font-weight: 600; font-size: 15px; cursor: pointer; transition: all .2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .btn-google:hover { background: #f9fafb; border-color: #9ca3af; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .btn-google img { width: 20px; height: 20px; }
+        
+        .auth-divider { display: flex; align-items: center; text-align: center; margin: 24px 0; color: var(--muted); font-size: 13px; font-weight: 500; }
+        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+        .auth-divider::before { margin-right: .5em; }
+        .auth-divider::after { margin-left: .5em; }
+        
+        .auth-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); margin-bottom: 16px; font-size: 14px; font-family: 'Inter', sans-serif; transition: all .2s; outline: none; }
+        .auth-input:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+        
+        .auth-submit { width: 100%; padding: 14px; border-radius: 12px; background: var(--accent); color: white; border: none; font-weight: 700; font-size: 15px; cursor: pointer; transition: all .2s; }
+        .auth-submit:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2); }
+        
+        .auth-switch { text-align: center; margin-top: 24px; font-size: 13px; color: var(--muted); }
+        .auth-switch a { color: var(--text); font-weight: 600; text-decoration: none; cursor: pointer; }
+        .auth-switch a:hover { text-decoration: underline; }
 
         /* CHATBOT */
         .chatbot-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,.2); z-index: 1000; transition: transform .3s; }
@@ -161,7 +195,7 @@
             @auth
                 <a href="{{ route('admin.dashboard') }}" class="nav-cta"><i class="fas fa-th-large"></i> Dashboard</a>
             @else
-                <a href="{{ route('admin.login') }}" class="nav-cta"><i class="fas fa-lock"></i> Admin</a>
+                <a onclick="openAuthModal()" class="nav-cta" style="cursor:pointer;"><i class="fas fa-user-circle"></i> Login</a>
             @endauth
         </div>
     </nav>
@@ -180,11 +214,38 @@
                 <a href="{{ route('courses') }}">Courses</a>
                 <a href="{{ url('chat') }}">Group Chat</a>
                 <a href="{{ url('quiz') }}">Quiz</a>
-                <a href="{{ route('admin.login') }}">Admin</a>
+                <a onclick="openAuthModal()" style="cursor:pointer;">Login</a>
             </div>
         </div>
         <div class="footer-bottom">&copy; {{ date('Y') }} EduCRM. All rights reserved.</div>
     </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authOverlay" onclick="if(event.target===this) closeAuthModal()">
+        <div class="auth-modal">
+            <button class="modal-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
+            <div class="auth-title">Welcome Back</div>
+            <div class="auth-sub">Login to your Student or Admin account</div>
+            
+            <button class="btn-google" onclick="alert('Google Sign-in triggered! This would securely log you in via OAuth.')">
+                <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google">
+                Sign in with Google
+            </button>
+            
+            <div class="auth-divider">or continue with email</div>
+            
+            <form action="{{ route('admin.login') }}" method="POST">
+                @csrf
+                <input type="email" name="email" class="auth-input" placeholder="Email address" required>
+                <input type="password" name="password" class="auth-input" placeholder="Password" required>
+                <button type="submit" class="auth-submit">Login Securely</button>
+            </form>
+            
+            <div class="auth-switch">
+                Don't have an account? <a onclick="alert('Registration flow triggered!')">Sign up</a>
+            </div>
+        </div>
+    </div>
 
     <!-- AI Chatbot UI -->
     <div class="chatbot-btn" onclick="toggleChatbot()">
@@ -221,6 +282,16 @@
             el.style.transform = 'translateY(20px)';
             observer.observe(el);
         });
+
+        // Auth Modal Logic
+        function openAuthModal() {
+            document.getElementById('authOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeAuthModal() {
+            document.getElementById('authOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
         // Chatbot Logic
         function toggleChatbot() {
