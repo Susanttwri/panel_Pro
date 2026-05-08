@@ -172,24 +172,15 @@
         .chatbot-input button { background: var(--accent); color: white; border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform .2s; }
         .chatbot-input button:hover { transform: scale(1.05); }
 
-        /* CUSTOM CURSOR */
-        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
-        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent); }
-        .cursor-outline { width: 40px; height: 40px; border: 2px solid rgba(0,0,0,0.2); transition: width .2s, height .2s, background-color .2s; }
-
         @media (max-width: 768px) {
             .features-grid { grid-template-columns: 1fr; }
             .hero-stats { gap: 28px; }
             .chatbot-window { width: calc(100vw - 40px); right: 20px; bottom: 90px; }
-            .cursor-dot, .cursor-outline { display: none; }
         }
     </style>
     @yield('styles')
 </head>
 <body>
-    <div class="cursor-dot" data-cursor-dot></div>
-    <div class="cursor-outline" data-cursor-outline></div>
-
     <nav class="nav">
         <a href="{{ route('home') }}" class="nav-brand">
             <div class="brand-icon"><i class="fas fa-layer-group"></i></div>
@@ -293,39 +284,6 @@
             el.style.transform = 'translateY(20px)';
             observer.observe(el);
         });
-
-        // Custom 3D Cursor Logic
-        const cursorDot = document.querySelector("[data-cursor-dot]");
-        const cursorOutline = document.querySelector("[data-cursor-outline]");
-        
-        if(cursorDot && cursorOutline) {
-            window.addEventListener("mousemove", function (e) {
-                const posX = e.clientX;
-                const posY = e.clientY;
-                
-                cursorDot.style.left = `${posX}px`;
-                cursorDot.style.top = `${posY}px`;
-                
-                cursorOutline.animate({
-                    left: `${posX}px`,
-                    top: `${posY}px`
-                }, { duration: 500, fill: "forwards" });
-            });
-
-            // Add hover effect for links and buttons
-            document.querySelectorAll('a, button, .mc-card').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursorOutline.style.width = '60px';
-                    cursorOutline.style.height = '60px';
-                    cursorOutline.style.backgroundColor = 'rgba(0,0,0,0.05)';
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursorOutline.style.width = '40px';
-                    cursorOutline.style.height = '40px';
-                    cursorOutline.style.backgroundColor = 'transparent';
-                });
-            });
-        }
 
         // Auth Modal Logic
         function openAuthModal() {
