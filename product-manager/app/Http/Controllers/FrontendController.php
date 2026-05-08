@@ -2,50 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Course;
+use App\Models\Instructor;
+use App\Models\Student;
+use App\Models\Enrollment;
 
 class FrontendController extends Controller
 {
-    /**
-     * Display the homepage with featured products.
-     */
     public function home()
     {
-        $featuredProducts = Product::where('is_active', true)
-            ->latest()
+        $featuredCourses = Course::with('instructor')
+            ->where('is_active', true)
+            ->where('is_featured', true)
             ->take(6)
             ->get();
 
-        return view('frontend.home', compact('featuredProducts'));
+        if ($featuredCourses->isEmpty()) {
+            $featuredCourses = Course::with('instructor')
+                ->where('is_active', true)
+                ->latest()
+                ->take(6)
+                ->get();
+        }
+
+        $stats = [
+            'students'    => Student::count(),
+            'courses'     => Course::where('is_active', true)->count(),
+            'instructors' => Instructor::where('is_active', true)->count(),
+            'enrollments' => Enrollment::count(),
+        ];
+
+        $instructors = Instructor::withCount('courses')
+            ->where('is_active', true)
+            ->take(4)
+            ->get();
+
+        return view('frontend.home', compact('featuredCourses', 'stats', 'instructors'));
     }
 
-    /**
-     * Display all active products.
-     */
-    public function products()
+    public function courses()
     {
-        $products = Product::where('is_active', true)
-            ->latest()
-            ->paginate(12);
+        $query = Course::with('instructor')
+            ->withCount('enrollments')
+            ->where('is_active', true);
 
-        return view('frontend.products', compact('products'));
+        if (request('category')) {
+            $query->where('category', request('category'));
+        }
+
+        if (request('level')) {
+            $query->where('level', request('level'));
+        }
+
+        if (request('search')) {
+            $query->where('title', 'like', '%' . request('search') . '%');
+        }
+
+        $courses    = $query->latest()->paginate(12)->withQueryString();
+        $categories = Course::where('is_active', true)->distinct()->pluck('category');
+
+        return view('frontend.courses', compact('courses', 'categories'));
     }
 
-    /**
-     * Display a single product.
-     */
-    public function show(Product $product)
+    public function courseDetail(Course $course)
     {
-        if (!$product->is_active) {
+        if (!$course->is_active) {
             abort(404);
         }
 
-        $relatedProducts = Product::where('is_active', true)
-            ->where('id', '!=', $product->id)
-            ->inRandomOrder()
+        $course->load(['instructor', 'enrollments']);
+
+        $related = Course::with('instructor')
+            ->where('is_active', true)
+            ->where('id', '!=', $course->id)
+            ->where('category', $course->category)
             ->take(3)
             ->get();
 
-        return view('frontend.product-detail', compact('product', 'relatedProducts'));
+        return view('frontend.course-detail', compact('course', 'related'));
+    }
+
+    public function instructors()
+    {
+        $instructors = Instructor::withCount('courses')
+            ->where('is_active', true)
+            ->get();
+
+        return view('frontend.instructors', compact('instructors'));
     }
 }

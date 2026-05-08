@@ -5,89 +5,127 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Product;
+use App\Models\Instructor;
+use App\Models\Course;
+use App\Models\Student;
+use App\Models\Enrollment;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Create admin user
-        User::updateOrCreate(
-            ['email' => 'admin@admin.com'],
+        // Admin user
+        User::firstOrCreate(
+            ['email' => 'admin@educrm.com'],
             [
-                'name' => 'Admin',
+                'name'     => 'Admin',
                 'password' => Hash::make('password'),
             ]
         );
 
-        // Create sample products
-        $products = [
-            [
-                'name' => 'Wireless Bluetooth Headphones',
-                'description' => 'Premium noise-cancelling wireless headphones with 30-hour battery life. Features advanced active noise cancellation, transparency mode, and premium sound quality with deep bass.',
-                'price' => 149.99,
-                'quantity' => 50,
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Smart Fitness Watch',
-                'description' => 'Track your health and fitness with GPS, heart rate monitor, sleep tracking, and 7-day battery life. Water resistant to 50 meters with a stunning AMOLED display.',
-                'price' => 249.99,
-                'quantity' => 35,
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Portable Power Bank 20000mAh',
-                'description' => 'Ultra-slim portable charger with fast charging support. Features dual USB-C ports and can charge multiple devices simultaneously. Perfect for travel.',
-                'price' => 39.99,
-                'quantity' => 100,
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Mechanical Gaming Keyboard',
-                'description' => 'RGB backlit mechanical keyboard with hot-swappable switches, N-key rollover, and programmable macro keys. Built with an aluminum frame for durability.',
-                'price' => 89.99,
-                'quantity' => 45,
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Ultra HD 4K Webcam',
-                'description' => 'Professional-grade webcam with auto-focus, built-in ring light, and AI-powered background blur. Perfect for video conferencing and content creation.',
-                'price' => 79.99,
-                'quantity' => 60,
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Ergonomic Office Chair',
-                'description' => 'Adjustable lumbar support, breathable mesh back, and 4D armrests. Designed for all-day comfort with a weight capacity of 300 lbs.',
-                'price' => 329.99,
-                'quantity' => 20,
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Smart LED Desk Lamp',
-                'description' => 'Touch-controlled LED desk lamp with adjustable color temperature and brightness. Features wireless charging pad and USB port. Eye-care technology reduces strain.',
-                'price' => 54.99,
-                'quantity' => 75,
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Noise Cancelling Earbuds',
-                'description' => 'Compact true wireless earbuds with adaptive noise cancellation, spatial audio, and 8-hour battery life per charge. IPX5 water resistant.',
-                'price' => 119.99,
-                'quantity' => 80,
-                'is_active' => false,
-            ],
+        // Instructors
+        $instructors = [
+            ['name' => 'Dr. Sarah Johnson', 'email' => 'sarah@educrm.com', 'specialization' => 'Mathematics', 'qualification' => 'PhD Mathematics', 'experience_years' => 12, 'bio' => 'Expert mathematician with 12 years of teaching experience at top universities.'],
+            ['name' => 'Prof. Michael Chen', 'email' => 'michael@educrm.com', 'specialization' => 'Computer Science', 'qualification' => 'PhD Computer Science', 'experience_years' => 8, 'bio' => 'Full-stack developer turned educator, passionate about making tech accessible.'],
+            ['name' => 'Ms. Emily Rodriguez', 'email' => 'emily@educrm.com', 'specialization' => 'English Literature', 'qualification' => 'MA English Literature', 'experience_years' => 6, 'bio' => 'Storyteller and literary critic with a flair for creative writing instruction.'],
+            ['name' => 'Dr. James Williams', 'email' => 'james@educrm.com', 'specialization' => 'Physics', 'qualification' => 'PhD Physics', 'experience_years' => 15, 'bio' => 'Research physicist and award-winning educator at Cambridge.'],
         ];
 
-        foreach ($products as $product) {
-            Product::updateOrCreate(
-                ['name' => $product['name']],
-                $product
+        $createdInstructors = [];
+        foreach ($instructors as $data) {
+            $createdInstructors[] = Instructor::firstOrCreate(['email' => $data['email']], array_merge($data, ['is_active' => true, 'phone' => '+1-555-' . rand(1000, 9999)]));
+        }
+
+        // Courses
+        $courses = [
+            ['title' => 'Advanced Mathematics', 'category' => 'Mathematics', 'level' => 'Advanced', 'price' => 299, 'duration_hours' => 48, 'instructor' => 0, 'is_featured' => true],
+            ['title' => 'Web Development Bootcamp', 'category' => 'Technology', 'level' => 'Beginner', 'price' => 399, 'duration_hours' => 60, 'instructor' => 1, 'is_featured' => true],
+            ['title' => 'Creative Writing Masterclass', 'category' => 'Literature', 'level' => 'Intermediate', 'price' => 199, 'duration_hours' => 30, 'instructor' => 2, 'is_featured' => true],
+            ['title' => 'Quantum Physics Fundamentals', 'category' => 'Science', 'level' => 'Advanced', 'price' => 349, 'duration_hours' => 40, 'instructor' => 3, 'is_featured' => true],
+            ['title' => 'Python Programming for Beginners', 'category' => 'Technology', 'level' => 'Beginner', 'price' => 149, 'duration_hours' => 25, 'instructor' => 1, 'is_featured' => false],
+            ['title' => 'Calculus & Linear Algebra', 'category' => 'Mathematics', 'level' => 'Intermediate', 'price' => 249, 'duration_hours' => 36, 'instructor' => 0, 'is_featured' => false],
+            ['title' => 'English Grammar Essentials', 'category' => 'Literature', 'level' => 'Beginner', 'price' => 99, 'duration_hours' => 20, 'instructor' => 2, 'is_featured' => false],
+            ['title' => 'Data Science with Python', 'category' => 'Technology', 'level' => 'Intermediate', 'price' => 449, 'duration_hours' => 55, 'instructor' => 1, 'is_featured' => false],
+        ];
+
+        $createdCourses = [];
+        foreach ($courses as $course) {
+            $instructor = $createdInstructors[$course['instructor']];
+            $createdCourses[] = Course::firstOrCreate(
+                [
+                    'title'         => $course['title'],
+                    'instructor_id' => $instructor->id,
+                ],
+                [
+                    'slug'           => Str::slug($course['title']) . '-' . strtolower(Str::random(4)),
+                    'title'          => $course['title'],
+                    'description'    => 'A comprehensive course covering all aspects of ' . $course['title'] . '. Designed for ' . $course['level'] . ' learners, this course will take you from fundamentals to mastery through hands-on projects and expert guidance.',
+                    'category'       => $course['category'],
+                    'level'          => $course['level'],
+                    'price'          => $course['price'],
+                    'duration_hours' => $course['duration_hours'],
+                    'is_active'      => true,
+                    'is_featured'    => $course['is_featured'],
+                    'instructor_id'  => $instructor->id,
+                ]
             );
+        }
+
+        // Students
+        $studentData = [
+            ['name' => 'Alice Thompson', 'email' => 'alice@student.com', 'gender' => 'female'],
+            ['name' => 'Bob Martinez', 'email' => 'bob@student.com', 'gender' => 'male'],
+            ['name' => 'Carol White', 'email' => 'carol@student.com', 'gender' => 'female'],
+            ['name' => 'David Lee', 'email' => 'david@student.com', 'gender' => 'male'],
+            ['name' => 'Emma Davis', 'email' => 'emma@student.com', 'gender' => 'female'],
+            ['name' => 'Frank Wilson', 'email' => 'frank@student.com', 'gender' => 'male'],
+            ['name' => 'Grace Taylor', 'email' => 'grace@student.com', 'gender' => 'female'],
+            ['name' => 'Henry Brown', 'email' => 'henry@student.com', 'gender' => 'male'],
+            ['name' => 'Iris Garcia', 'email' => 'iris@student.com', 'gender' => 'female'],
+            ['name' => 'Jack Anderson', 'email' => 'jack@student.com', 'gender' => 'male'],
+        ];
+
+        $createdStudents = [];
+        foreach ($studentData as $sd) {
+            $createdStudents[] = Student::firstOrCreate(
+                ['email' => $sd['email']],
+                [
+                    'name'       => $sd['name'],
+                    'phone'      => '+1-555-' . rand(1000, 9999),
+                    'gender'     => $sd['gender'],
+                    'status'     => 'active',
+                    'student_id' => 'STU-' . strtoupper(Str::random(8)),
+                    'address'    => rand(100, 999) . ' Main Street, City, State',
+                ]
+            );
+        }
+
+        // Enrollments
+        $statuses = ['active', 'active', 'active', 'completed', 'dropped'];
+        foreach ($createdStudents as $student) {
+            $numCourses = rand(1, 3);
+            $shuffled = $createdCourses;
+            shuffle($shuffled);
+            $selected = array_slice($shuffled, 0, $numCourses);
+
+            foreach ($selected as $course) {
+                $exists = Enrollment::where('student_id', $student->id)
+                    ->where('course_id', $course->id)
+                    ->exists();
+                if (!$exists) {
+                    $status = $statuses[array_rand($statuses)];
+                    Enrollment::create([
+                        'student_id'  => $student->id,
+                        'course_id'   => $course->id,
+                        'enrolled_at' => now()->subDays(rand(10, 180)),
+                        'status'      => $status,
+                        'progress'    => $status === 'completed' ? 100 : ($status === 'dropped' ? rand(0, 30) : rand(10, 90)),
+                        'amount_paid' => $course->price,
+                        'notes'       => null,
+                    ]);
+                }
+            }
         }
     }
 }
