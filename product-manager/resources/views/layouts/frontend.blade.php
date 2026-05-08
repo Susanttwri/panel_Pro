@@ -172,26 +172,37 @@
         .chatbot-input button { background: var(--accent); color: white; border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform .2s; }
         .chatbot-input button:hover { transform: scale(1.05); }
 
+        /* CUSTOM CURSOR */
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent); }
+        .cursor-outline { width: 40px; height: 40px; border: 2px solid rgba(0,0,0,0.2); transition: width .2s, height .2s, background-color .2s; }
+
         @media (max-width: 768px) {
             .features-grid { grid-template-columns: 1fr; }
             .hero-stats { gap: 28px; }
             .chatbot-window { width: calc(100vw - 40px); right: 20px; bottom: 90px; }
+            .cursor-dot, .cursor-outline { display: none; }
         }
     </style>
     @yield('styles')
 </head>
 <body>
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
     <nav class="nav">
         <a href="{{ route('home') }}" class="nav-brand">
-            <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
-            <h1>EduCRM</h1>
+            <div class="brand-icon"><i class="fas fa-layer-group"></i></div>
+            <h1>PanelPro CRM</h1>
         </a>
         <div class="nav-links">
             <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+            <a href="{{ route('home') }}#about">About Us</a>
             <a href="{{ route('courses') }}" class="{{ request()->routeIs('courses') || request()->routeIs('courses.show') ? 'active' : '' }}">Courses</a>
             <a href="{{ route('instructors') }}" class="{{ request()->routeIs('instructors') ? 'active' : '' }}">Instructors</a>
             <a href="{{ url('chat') }}" class="{{ request()->is('chat') ? 'active' : '' }}">Community Chat</a>
             <a href="{{ url('quiz') }}" class="{{ request()->is('quiz') ? 'active' : '' }}">Quiz</a>
+            <a href="{{ route('home') }}#contact" class="nav-cta" style="background: transparent !important; color: #000 !important; border: 1px solid #ccc; margin-right: 8px;">Contact Us</a>
             @auth
                 <a href="{{ route('admin.dashboard') }}" class="nav-cta"><i class="fas fa-th-large"></i> Dashboard</a>
             @else
@@ -206,18 +217,19 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <h2>EduCRM</h2>
-                <p>Empowering education through technology.</p>
+                <h2>PanelPro CRM</h2>
+                <p>Empowering education with modern technology.</p>
             </div>
             <div class="footer-links">
                 <a href="{{ route('home') }}">Home</a>
+                <a href="{{ route('home') }}#about">About Us</a>
                 <a href="{{ route('courses') }}">Courses</a>
                 <a href="{{ url('chat') }}">Group Chat</a>
                 <a href="{{ url('quiz') }}">Quiz</a>
                 <a onclick="openAuthModal()" style="cursor:pointer;">Login</a>
             </div>
         </div>
-        <div class="footer-bottom">&copy; {{ date('Y') }} EduCRM. All rights reserved.</div>
+        <div class="footer-bottom">&copy; {{ date('Y') }} PanelPro CRM. All rights reserved.</div>
     </footer>
 
     <!-- Auth Modal -->
@@ -244,9 +256,15 @@
     <div class="chatbot-btn" onclick="toggleChatbot()">
         <i class="fas fa-robot"></i>
     </div>
+    
+    <!-- Floating Contact Button -->
+    <a href="{{ route('home') }}#contact" class="contact-btn-floating">
+        <i class="fas fa-envelope"></i>
+    </a>
+
     <div class="chatbot-window" id="chatbotWindow">
         <div class="chatbot-header">
-            <h3><i class="fas fa-robot"></i> EduAI Assistant</h3>
+            <h3><i class="fas fa-robot"></i> PanelAI Assistant</h3>
             <button class="chatbot-close" onclick="toggleChatbot()"><i class="fas fa-times"></i></button>
         </div>
         <div class="chatbot-body" id="chatbotBody">
@@ -275,6 +293,39 @@
             el.style.transform = 'translateY(20px)';
             observer.observe(el);
         });
+
+        // Custom 3D Cursor Logic
+        const cursorDot = document.querySelector("[data-cursor-dot]");
+        const cursorOutline = document.querySelector("[data-cursor-outline]");
+        
+        if(cursorDot && cursorOutline) {
+            window.addEventListener("mousemove", function (e) {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                
+                cursorOutline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 500, fill: "forwards" });
+            });
+
+            // Add hover effect for links and buttons
+            document.querySelectorAll('a, button, .mc-card').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorOutline.style.width = '60px';
+                    cursorOutline.style.height = '60px';
+                    cursorOutline.style.backgroundColor = 'rgba(0,0,0,0.05)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorOutline.style.width = '40px';
+                    cursorOutline.style.height = '40px';
+                    cursorOutline.style.backgroundColor = 'transparent';
+                });
+            });
+        }
 
         // Auth Modal Logic
         function openAuthModal() {
