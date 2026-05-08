@@ -7,7 +7,7 @@
     /* Unique Minimalist Hero */
     .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 120px 5% 60px; overflow: hidden; background: #ffffff; text-align: center; }
     .hero-bg { position: absolute; inset: 0; background: radial-gradient(circle at 50% -20%, rgba(0,0,0,0.03) 0%, transparent 60%); z-index: 0; pointer-events: none; }
-    .hero-content { position: relative; z-index: 2; max-width: 900px; display: flex; flex-direction: column; align-items: center; perspective: 1000px; }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; display: flex; flex-direction: column; align-items: center; }
     
     .hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08); border-radius: 40px; font-size: 13px; font-weight: 600; color: #333; margin-bottom: 32px; backdrop-filter: blur(10px); }
     .hero-pill i { color: var(--accent); }
@@ -40,19 +40,19 @@
     /* Minimal Courses Grid */
     .minimal-courses { max-width: 1300px; margin: 0 auto; padding: 100px 5%; }
     .mc-header { text-align: center; margin-bottom: 60px; }
-    .mc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; perspective: 1000px; }
+    .mc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; }
     
-    .mc-card { background: #fff; border-radius: 20px; padding: 32px; border: 1px solid #f0f0f0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; text-decoration: none; color: inherit; position: relative; overflow: hidden; transform-style: preserve-3d; }
+    .mc-card { background: #fff; border-radius: 20px; padding: 32px; border: 1px solid #f0f0f0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; text-decoration: none; color: inherit; position: relative; overflow: hidden; }
     .mc-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #000; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
-    .mc-card:hover { transform: translateY(-8px) rotateX(2deg) rotateY(-2deg); box-shadow: -20px 30px 60px -15px rgba(0,0,0,0.08); border-color: transparent; }
+    .mc-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.08); border-color: transparent; }
     .mc-card:hover::before { transform: scaleX(1); }
     
-    .mc-icon { width: 48px; height: 48px; border-radius: 12px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 24px; color: #000; transition: all 0.3s; transform: translateZ(20px); }
+    .mc-icon { width: 48px; height: 48px; border-radius: 12px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 24px; color: #000; transition: all 0.3s; }
     .mc-card:hover .mc-icon { background: #000; color: #fff; }
     
-    .mc-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 12px; transform: translateZ(10px); }
-    .mc-title { font-size: 20px; font-weight: 800; color: #000; margin-bottom: 12px; line-height: 1.3; transform: translateZ(30px); }
-    .mc-footer { margin-top: auto; padding-top: 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; transform: translateZ(10px); }
+    .mc-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 12px; }
+    .mc-title { font-size: 20px; font-weight: 800; color: #000; margin-bottom: 12px; line-height: 1.3; }
+    .mc-footer { margin-top: auto; padding-top: 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
     .mc-price { font-size: 18px; font-weight: 900; }
 </style>
 @endsection
@@ -61,7 +61,7 @@
     <!-- Hero -->
     <section class="hero">
         <div class="hero-bg"></div>
-        <div class="hero-content" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-perspective="1000">
+        <div class="hero-content">
             <div class="hero-pill animate-in delay-1"><i class="fas fa-bolt"></i> The Modern Learning Standard</div>
             <h1 class="hero-title animate-in delay-1">Learn.<br><span>Master.</span> Grow.</h1>
             <p class="hero-desc animate-in delay-2">We stripped away the noise. Just pure, high-quality education, brilliant instructors, and a platform designed to make you strictly better at what you do.</p>
@@ -94,7 +94,7 @@
             <p class="cs-desc">We are redefining the educational experience. PanelPro CRM bridges the gap between expert instructors and eager learners. Our platform focuses on an interactive, seamless, and highly engaging design to keep you focused on what matters most—your growth.</p>
             <a href="{{ route('courses') }}" class="btn-hero btn-hero-ghost" style="border-radius: 30px;"><i class="fas fa-info-circle"></i> Discover More</a>
         </div>
-        <div class="cs-image" data-tilt data-tilt-max="10" data-tilt-speed="400">
+        <div class="cs-image">
             <i class="fas fa-layer-group floating" style="font-size: 100px; color: #000; opacity: 0.1; position: absolute;"></i>
             <h3 style="font-size: 28px; font-weight: 900; z-index: 2;" class="floating">Innovation in EdTech.</h3>
         </div>
@@ -110,7 +110,7 @@
         @if($featuredCourses->count() > 0)
             <div class="mc-grid">
                 @foreach($featuredCourses as $course)
-                    <a href="{{ route('courses.show', $course) }}" class="mc-card" data-tilt data-tilt-max="10" data-tilt-glare="true" data-tilt-max-glare="0.2">
+                    <a href="{{ route('courses.show', $course) }}" class="mc-card">
                         <div class="mc-icon">
                             @if($course->category == 'Technology' || $course->category == 'Programming')
                                 <i class="fas fa-laptop-code"></i>
@@ -172,8 +172,6 @@
 @endsection
 
 @section('scripts')
-<!-- Vanilla Tilt JS for 3D Interactive cards -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 <script>
     // Stats Counter
     function animateCounter(el) {
