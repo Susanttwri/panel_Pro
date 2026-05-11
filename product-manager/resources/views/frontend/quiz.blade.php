@@ -1,5 +1,5 @@
 @extends('layouts.frontend')
-@section('title', 'Offline/Online Quiz — EduCRM')
+@section('title', 'Offline/Online Quiz — Edu')
 
 @section('styles')
 <style>
@@ -99,7 +99,7 @@
     updateNetworkStatus();
 
     // Check Previous Score
-    const savedScore = localStorage.getItem('educrm_quiz_score');
+    const savedScore = localStorage.getItem('edu_quiz_score');
     if(savedScore) {
         document.getElementById('last-score').style.display = 'block';
         document.getElementById('last-score').innerText = `Last attempt score: ${savedScore}%`;
@@ -219,12 +219,12 @@
         document.getElementById('correct-text').innerText = score;
         
         // Save for offline recall
-        localStorage.setItem('educrm_quiz_score', finalPercentage);
+        localStorage.setItem('edu_quiz_score', finalPercentage);
     }
 
     function resetQuiz() {
         showScreen('quiz-welcome');
-        const savedScore = localStorage.getItem('educrm_quiz_score');
+        const savedScore = localStorage.getItem('edu_quiz_score');
         if(savedScore) {
             document.getElementById('last-score').style.display = 'block';
             document.getElementById('last-score').innerText = `Last attempt score: ${savedScore}%`;

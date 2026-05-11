@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         // Admin user
         User::firstOrCreate(
-            ['email' => 'admin@educrm.com'],
+            ['email' => 'admin@edu.com'],
             [
                 'name'     => 'Admin',
                 'password' => Hash::make('password'),
@@ -26,10 +26,10 @@ class DatabaseSeeder extends Seeder
 
         // Instructors
         $instructors = [
-            ['name' => 'Dr. Sarah Johnson', 'email' => 'sarah@educrm.com', 'specialization' => 'Mathematics', 'qualification' => 'PhD Mathematics', 'experience_years' => 12, 'bio' => 'Expert mathematician with 12 years of teaching experience at top universities.'],
-            ['name' => 'Prof. Michael Chen', 'email' => 'michael@educrm.com', 'specialization' => 'Computer Science', 'qualification' => 'PhD Computer Science', 'experience_years' => 8, 'bio' => 'Full-stack developer turned educator, passionate about making tech accessible.'],
-            ['name' => 'Ms. Emily Rodriguez', 'email' => 'emily@educrm.com', 'specialization' => 'English Literature', 'qualification' => 'MA English Literature', 'experience_years' => 6, 'bio' => 'Storyteller and literary critic with a flair for creative writing instruction.'],
-            ['name' => 'Dr. James Williams', 'email' => 'james@educrm.com', 'specialization' => 'Physics', 'qualification' => 'PhD Physics', 'experience_years' => 15, 'bio' => 'Research physicist and award-winning educator at Cambridge.'],
+            ['name' => 'Dr. Sarah Johnson', 'email' => 'sarah@edu.com', 'specialization' => 'Mathematics', 'qualification' => 'PhD Mathematics', 'experience_years' => 12, 'bio' => 'Expert mathematician with 12 years of teaching experience at top universities.'],
+            ['name' => 'Prof. Michael Chen', 'email' => 'michael@edu.com', 'specialization' => 'Computer Science', 'qualification' => 'PhD Computer Science', 'experience_years' => 8, 'bio' => 'Full-stack developer turned educator, passionate about making tech accessible.'],
+            ['name' => 'Ms. Emily Rodriguez', 'email' => 'emily@edu.com', 'specialization' => 'English Literature', 'qualification' => 'MA English Literature', 'experience_years' => 6, 'bio' => 'Storyteller and literary critic with a flair for creative writing instruction.'],
+            ['name' => 'Dr. James Williams', 'email' => 'james@edu.com', 'specialization' => 'Physics', 'qualification' => 'PhD Physics', 'experience_years' => 15, 'bio' => 'Research physicist and award-winning educator at Cambridge.'],
         ];
 
         $createdInstructors = [];
@@ -65,6 +65,9 @@ class DatabaseSeeder extends Seeder
                     'level'          => $course['level'],
                     'price'          => $course['price'],
                     'duration_hours' => $course['duration_hours'],
+                    'start_date'     => now()->setYear(2026)->addMonths(rand(1, 5))->addDays(rand(1, 20)),
+                    'deadline'       => now()->setYear(2026)->addMonths(rand(0, 1))->addDays(rand(1, 20)),
+                    'max_students'   => 100,
                     'is_active'      => true,
                     'is_featured'    => $course['is_featured'],
                     'instructor_id'  => $instructor->id,

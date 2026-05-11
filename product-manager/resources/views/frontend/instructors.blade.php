@@ -1,6 +1,6 @@
 @extends('layouts.frontend')
-@section('title', 'Our Instructors — EduCRM')
-@section('meta_description', 'Meet the expert instructors powering EduCRM. Learn from the best in their fields.')
+@section('title', 'Our Instructors — Edu')
+@section('meta_description', 'Meet the expert instructors powering Edu. Learn from the best in their fields.')
 
 @section('content')
     <section style="padding: 100px 5% 60px; max-width: 1300px; margin: 0 auto;">

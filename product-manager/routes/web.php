@@ -35,7 +35,9 @@ Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');
 |--------------------------------------------------------------------------
 */
 Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('admin.login');
-Route::post('/admin/login', [AuthController::class, 'login']);
+Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 /*

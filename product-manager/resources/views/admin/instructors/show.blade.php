@@ -50,7 +50,7 @@
                                     @elseif($c->level == 'Intermediate')<span class="badge badge-warning">Intermediate</span>
                                     @else<span class="badge badge-danger">Advanced</span>@endif
                                 </td>
-                                <td style="font-weight:700; color:var(--green);">${{ number_format($c->price, 0) }}</td>
+                                <td style="font-weight:700; color:var(--green);">Rs. {{ number_format($c->price, 0) }}</td>
                                 <td>
                                     @if($c->is_active)<span class="badge badge-success">Active</span>
                                     @else<span class="badge badge-danger">Inactive</span>@endif

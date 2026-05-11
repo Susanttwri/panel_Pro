@@ -1,5 +1,5 @@
 @extends('layouts.frontend')
-@section('title', 'Community Chat — EduCRM')
+@section('title', 'Community Chat — Edu')
 
 @section('content')
 <section style="padding: 100px 5% 60px; max-width: 900px; margin: 0 auto; min-height: 80vh; display: flex; flex-direction: column;">
@@ -20,23 +20,60 @@
                 </div>
             @endif
             @foreach($messages as $msg)
-                <div style="display: flex; flex-direction: column; {{ $msg->is_admin ? 'align-items: flex-end;' : 'align-items: flex-start;' }}">
-                    <div style="font-size: 11px; color: var(--muted); margin-bottom: 4px; display: flex; gap: 8px; align-items: center;">
-                        @if($msg->is_admin)
-                            <span class="badge" style="background:var(--accent); color:white; padding:2px 6px; font-size:9px; border-radius:4px;"><i class="fas fa-shield-alt"></i> Admin</span>
-                        @endif
-                        <strong>{{ $msg->user_name }}</strong> &bull; {{ $msg->created_at->diffForHumans() }}
-                        
-                        @if($isAdmin)
-                            <form action="{{ route('chat.destroy', $msg->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete this message?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" style="background:none; border:none; color:red; cursor:pointer; font-size:11px; margin-left:8px;"><i class="fas fa-trash"></i> Delete</button>
-                            </form>
-                        @endif
+                @php
+                    $isMe = false;
+                    // Check if current session user or auth user matches the message user
+                    if (Auth::check() && $msg->is_admin) {
+                        $isMe = true;
+                    } elseif (!Auth::check() && !$msg->is_admin && session('chat_name') == $msg->user_name) {
+                        $isMe = true;
+                    }
+                @endphp
+                
+                <div style="display: flex; flex-direction: column; {{ $isMe ? 'align-items: flex-end;' : 'align-items: flex-start;' }} width: 100%;">
+                    <!-- Message Bubble -->
+                    <div style="
+                        position: relative;
+                        max-width: 85%;
+                        min-width: 80px;
+                        padding: 8px 12px 20px 12px;
+                        border-radius: 12px;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                        {{ $isMe ? 'background: #dcf8c6; color: #303030; border-top-right-radius: 2px;' : 'background: #ffffff; color: #303030; border-top-left-radius: 2px; border: 1px solid #eee;' }}
+                    ">
+                        <!-- Sender Name -->
+                        <div style="font-size: 12px; font-weight: 700; color: {{ $isMe ? '#075e54' : '#34b7f1' }}; margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center;">
+                            <span>{{ $msg->user_name }}</span>
+                            @if($msg->is_admin)
+                                <span style="font-size: 9px; background: rgba(0,0,0,0.1); padding: 1px 4px; border-radius: 4px; margin-left: 4px;">ADMIN</span>
+                            @endif
+                        </div>
+
+                        <!-- Message Content -->
+                        <div style="word-wrap: break-word;">
+                            {{ $msg->message }}
+                        </div>
+
+                        <!-- Timestamp -->
+                        <div style="position: absolute; bottom: 4px; right: 8px; font-size: 10px; color: #888; display: flex; align-items: center; gap: 4px;">
+                            {{ $msg->created_at->format('H:i') }}
+                            @if($isMe)
+                                <i class="fas fa-check-double" style="color: #34b7f1; font-size: 8px;"></i>
+                            @endif
+                        </div>
                     </div>
-                    <div style="max-width: 80%; padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.5; {{ $msg->is_admin ? 'background:var(--accent); color:white; border-bottom-right-radius: 2px;' : 'background:var(--card); border:1px solid var(--border); border-bottom-left-radius: 2px;' }}">
-                        {{ $msg->message }}
-                    </div>
+                    
+                    <!-- Admin Delete Button -->
+                    @if($isAdmin)
+                        <form action="{{ route('chat.destroy', $msg->id) }}" method="POST" style="margin-top: 4px;" onsubmit="return confirm('Delete this message?');">
+                            @csrf @method('DELETE')
+                            <button type="submit" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:10px; display: flex; align-items: center; gap: 4px;">
+                                <i class="fas fa-trash-alt"></i> Delete Message
+                            </button>
+                        </form>
+                    @endif
                 </div>
             @endforeach
         </div>
