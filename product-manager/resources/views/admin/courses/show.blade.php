@@ -24,7 +24,7 @@
             <div style="font-size:13px; color:var(--muted); line-height:1.7; margin-bottom:16px;">{{ $course->description }}</div>
             <div style="border-top:1px solid var(--border); padding-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
                 <div style="text-align:center;">
-                    <div style="font-size:20px; font-weight:800; color:var(--green);">${{ number_format($course->price, 0) }}</div>
+                    <div style="font-size:20px; font-weight:800; color:var(--green);">Rs. {{ number_format($course->price, 0) }}</div>
                     <div style="font-size:11px; color:var(--muted);">Price</div>
                 </div>
                 <div style="text-align:center;">
@@ -79,7 +79,7 @@
                                     @elseif($e->status === 'active')<span class="badge badge-info">Active</span>
                                     @else<span class="badge badge-danger">Dropped</span>@endif
                                 </td>
-                                <td style="font-weight:600; color:var(--green);">${{ number_format($e->amount_paid, 0) }}</td>
+                                <td style="font-weight:600; color:var(--green);">Rs. {{ number_format($e->amount_paid, 0) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

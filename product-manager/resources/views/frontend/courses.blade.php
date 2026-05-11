@@ -1,6 +1,6 @@
 @extends('layouts.frontend')
-@section('title', 'Browse Courses — EduCRM')
-@section('meta_description', 'Browse all available courses on EduCRM. Filter by category, level, and more.')
+@section('title', 'Browse Courses — Edu')
+@section('meta_description', 'Browse all available courses on Edu. Filter by category, level, and more.')
 
 @section('content')
     <section style="padding: 100px 5% 60px; max-width: 1300px; margin: 0 auto;">
@@ -57,11 +57,29 @@
                             </div>
                             <div class="course-title">{{ $course->title }}</div>
                             <div class="course-instructor"><i class="fas fa-user-circle" style="margin-right:5px;"></i>{{ $course->instructor?->name ?? 'Expert Instructor' }}</div>
+                            
+                            <div style="font-size:12px; color:var(--muted); margin: 10px 0; display:grid; gap:4px;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <i class="fas fa-calendar-alt" style="width:14px; color:var(--accent);"></i>
+                                    Starts: <strong>{{ $course->start_date?->format('M d, Y') ?? 'TBA' }}</strong>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <i class="fas fa-hourglass-end" style="width:14px; color:var(--red);"></i>
+                                    Deadline: <strong>{{ $course->deadline?->format('M d, Y') ?? 'TBA' }}</strong>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <i class="fas fa-user-friends" style="width:14px; color:var(--green);"></i>
+                                    Enrolled: <strong>{{ $course->enrollments_count }} / {{ $course->max_students }}</strong>
+                                    @if($course->enrollments_count >= $course->max_students)
+                                        <span style="color:var(--red); font-weight:700; font-size:10px; margin-left:4px;">[FULL]</span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="course-footer">
-                                <div class="course-price {{ $course->price == 0 ? 'free' : '' }}">{{ $course->price == 0 ? 'Free' : '$'.number_format($course->price, 0) }}</div>
+                                <div class="course-price {{ $course->price == 0 ? 'free' : '' }}">{{ $course->price == 0 ? 'Free' : 'Rs. '.number_format($course->price, 0) }}</div>
                                 <div class="course-info">
                                     <span><i class="fas fa-clock"></i> {{ $course->duration_hours }}h</span>
-                                    <span><i class="fas fa-users"></i> {{ $course->enrollments_count }}</span>
                                 </div>
                             </div>
                         </div>

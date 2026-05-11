@@ -1,5 +1,5 @@
 @extends('layouts.frontend')
-@section('title', $course->title . ' — EduCRM')
+@section('title', $course->title . ' — Edu')
 @section('meta_description', Str::limit($course->description, 160))
 
 @section('content')
@@ -55,15 +55,15 @@
                 <h1 style="font-size:clamp(22px,3vw,34px); font-weight:800; line-height:1.2; margin-bottom:16px; letter-spacing:-.5px;">{{ $course->title }}</h1>
 
                 <div style="font-size:38px; font-weight:900; color:{{ $course->price == 0 ? 'var(--green)' : 'var(--text)' }}; margin-bottom:20px; letter-spacing:-1px;">
-                    {{ $course->price == 0 ? 'Free' : '$'.number_format($course->price, 0) }}
+                    {{ $course->price == 0 ? 'Free' : 'Rs. '.number_format($course->price, 0) }}
                 </div>
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;">
                     @foreach([
                         ['clock', $course->duration_hours . ' hours', 'Duration'],
-                        ['users', $course->enrollments->count() . ' students', 'Enrolled'],
-                        ['signal', $course->level, 'Level'],
-                        ['folder-open', $course->category, 'Category'],
+                        ['users', $course->enrollments->count() . ' / ' . $course->max_students . ' spots', 'Enrollment Status'],
+                        ['calendar-alt', $course->start_date?->format('M d, Y') ?? 'TBA', 'Course Starts'],
+                        ['hourglass-end', $course->deadline?->format('M d, Y') ?? 'TBA', 'Apply By'],
                     ] as [$icon, $val, $label])
                         <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px;">
                             <div style="font-size:11px; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px;">{{ $label }}</div>
@@ -74,6 +74,22 @@
                     @endforeach
                 </div>
 
+                @php
+                    $isFull = $course->enrollments->count() >= $course->max_students;
+                    $deadlinePassed = $course->deadline && $course->deadline->isPast();
+                    $canEnroll = !$isFull && !$deadlinePassed;
+                @endphp
+
+                @if($isFull)
+                    <div style="background:rgba(239,68,68,.1); color:var(--red); padding:12px; border-radius:8px; font-size:13px; font-weight:600; margin-bottom:20px;">
+                        <i class="fas fa-exclamation-circle"></i> This course has reached its maximum capacity of {{ $course->max_students }} students.
+                    </div>
+                @elseif($deadlinePassed)
+                    <div style="background:rgba(239,68,68,.1); color:var(--red); padding:12px; border-radius:8px; font-size:13px; font-weight:600; margin-bottom:20px;">
+                        <i class="fas fa-clock"></i> The enrollment deadline for this course has passed.
+                    </div>
+                @endif
+
                 @if($course->description)
                     <div style="font-size:14px; color:var(--muted); line-height:1.8; margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid var(--border);">
                         {{ $course->description }}
@@ -81,9 +97,15 @@
                 @endif
 
                 <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                    <a href="{{ route('admin.enrollments.create') }}?course_id={{ $course->id }}" class="btn-hero btn-hero-primary">
-                        <i class="fas fa-graduation-cap"></i> Enroll Now
-                    </a>
+                    @if($canEnroll)
+                        <a href="{{ route('admin.enrollments.create') }}?course_id={{ $course->id }}" class="btn-hero btn-hero-primary">
+                            <i class="fas fa-graduation-cap"></i> Enroll Now
+                        </a>
+                    @else
+                        <button class="btn-hero btn-hero-primary" style="opacity: 0.5; cursor: not-allowed;" disabled>
+                            <i class="fas fa-ban"></i> Enrollment Closed
+                        </button>
+                    @endif
                     <a href="{{ route('courses') }}" class="btn-hero btn-hero-ghost">
                         <i class="fas fa-arrow-left"></i> Back to Courses
                     </a>
@@ -112,7 +134,7 @@
                                 </div>
                                 <div class="course-title">{{ $r->title }}</div>
                                 <div class="course-footer">
-                                    <div class="course-price {{ $r->price == 0 ? 'free' : '' }}">{{ $r->price == 0 ? 'Free' : '$'.number_format($r->price, 0) }}</div>
+                                    <div class="course-price {{ $r->price == 0 ? 'free' : '' }}">{{ $r->price == 0 ? 'Free' : 'Rs. '.number_format($r->price, 0) }}</div>
                                     <div class="course-info"><span><i class="fas fa-clock"></i> {{ $r->duration_hours }}h</span></div>
                                 </div>
                             </div>

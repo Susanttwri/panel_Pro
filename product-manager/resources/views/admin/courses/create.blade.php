@@ -33,7 +33,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Price ($) *</label>
+                    <label class="form-label">Price (Rs.) *</label>
                     <input type="number" name="price" class="form-control" value="{{ old('price', 0) }}" required min="0" step="0.01">
                 </div>
                 <div class="form-group">
@@ -48,6 +48,18 @@
                             <option value="{{ $instructor->id }}" {{ old('instructor_id') == $instructor->id ? 'selected' : '' }}>{{ $instructor->name }}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Start Date *</label>
+                    <input type="date" name="start_date" class="form-control" value="{{ old('start_date') }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Enrollment Deadline *</label>
+                    <input type="date" name="deadline" class="form-control" value="{{ old('deadline') }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Max Students *</label>
+                    <input type="number" name="max_students" class="form-control" value="{{ old('max_students', 100) }}" required min="1">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Thumbnail</label>

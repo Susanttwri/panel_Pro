@@ -9,7 +9,8 @@ class Course extends Model
 {
     protected $fillable = [
         'title', 'slug', 'description', 'category', 'level',
-        'price', 'duration_hours', 'thumbnail', 'is_active',
+        'price', 'duration_hours', 'start_date', 'deadline',
+        'max_students', 'thumbnail', 'is_active',
         'is_featured', 'instructor_id',
     ];
 
@@ -17,6 +18,9 @@ class Course extends Model
         'price' => 'decimal:2',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
+        'start_date' => 'date',
+        'deadline' => 'date',
+        'max_students' => 'integer',
     ];
 
     protected static function boot()

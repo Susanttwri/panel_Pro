@@ -58,8 +58,13 @@
                                 @endif
                             </td>
                             <td style="font-size:13px;">{{ $course->instructor?->name ?? '—' }}</td>
-                            <td><span style="font-weight:700; color:var(--green);">${{ number_format($course->price, 0) }}</span></td>
-                            <td><span class="badge badge-info">{{ $course->enrollments_count }}</span></td>
+                            <td><span style="font-weight:700; color:var(--green);">Rs. {{ number_format($course->price, 0) }}</span></td>
+                            <td>
+                                <div style="font-size:13px; font-weight:600;">{{ $course->enrollments_count }} / {{ $course->max_students }}</div>
+                                <div class="progress-bar" style="width:100%; margin-top:4px; height:4px;">
+                                    <div class="progress-fill" style="width:{{ min(100, ($course->enrollments_count / max(1, $course->max_students)) * 100) }}%; background: {{ $course->enrollments_count >= $course->max_students ? 'var(--red)' : 'var(--accent)' }};"></div>
+                                </div>
+                            </td>
                             <td>
                                 @if($course->is_active)
                                     <span class="badge badge-success">Active</span>
