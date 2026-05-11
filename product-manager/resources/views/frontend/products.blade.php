@@ -26,7 +26,7 @@
                             <p>{{ Str::limit($product->description, 100) }}</p>
                             <div class="product-card-footer">
                                 <div class="product-price">
-                                    ${{ number_format($product->price, 2) }}
+                                    Rs. {{ number_format($product->price, 2) }}
                                 </div>
                                 <span class="product-stock {{ $product->quantity > 0 ? 'in-stock' : 'out-of-stock' }}">
                                     {{ $product->quantity > 0 ? 'In Stock' : 'Out of Stock' }}

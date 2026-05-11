@@ -29,7 +29,7 @@
         <div class="stat-card">
             <div class="stat-icon blue"><i class="fas fa-coins"></i></div>
             <div class="stat-info">
-                <h3>${{ number_format(\App\Models\Product::sum('price'), 0) }}</h3>
+                <h3>Rs. {{ number_format(\App\Models\Product::sum('price'), 0) }}</h3>
                 <p>Total Value</p>
             </div>
         </div>
@@ -74,7 +74,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="price-tag">${{ number_format($product->price, 2) }}</span></td>
+                            <td><span class="price-tag">Rs. {{ number_format($product->price, 2) }}</span></td>
                             <td>
                                 <span style="font-weight: 600; color: {{ $product->quantity > 0 ? '#34d399' : '#f87171' }};">
                                     {{ $product->quantity }}

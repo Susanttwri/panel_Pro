@@ -29,7 +29,7 @@
                         <option value="">Select course...</option>
                         @foreach($courses as $course)
                             <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
-                                {{ $course->title }} (${{ number_format($course->price, 0) }})
+                                {{ $course->title }} (Rs. {{ number_format($course->price, 0) }})
                             </option>
                         @endforeach
                     </select>
@@ -51,7 +51,7 @@
                     <input type="number" name="progress" class="form-control" value="{{ old('progress', 0) }}" min="0" max="100" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Amount Paid ($) *</label>
+                    <label class="form-label">Amount Paid (Rs.) *</label>
                     <input type="number" name="amount_paid" class="form-control" value="{{ old('amount_paid', 0) }}" min="0" step="0.01" required>
                 </div>
                 <div class="form-group full">

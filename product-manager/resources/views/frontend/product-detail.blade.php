@@ -27,7 +27,7 @@
 
                 <h1>{{ $product->name }}</h1>
 
-                <div class="detail-price">${{ number_format($product->price, 2) }}</div>
+                <div class="detail-price">Rs. {{ number_format($product->price, 2) }}</div>
 
                 <div class="detail-desc">
                     {{ $product->description ?? 'No description available for this product.' }}
@@ -83,7 +83,7 @@
                             <h3>{{ $related->name }}</h3>
                             <p>{{ Str::limit($related->description, 80) }}</p>
                             <div class="product-card-footer">
-                                <div class="product-price">${{ number_format($related->price, 2) }}</div>
+                                <div class="product-price">Rs. {{ number_format($related->price, 2) }}</div>
                                 <span class="product-stock {{ $related->quantity > 0 ? 'in-stock' : 'out-of-stock' }}">
                                     {{ $related->quantity > 0 ? 'In Stock' : 'Out of Stock' }}
                                 </span>

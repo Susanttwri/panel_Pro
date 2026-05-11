@@ -29,7 +29,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="price">Price ($) *</label>
+                        <label for="price">Price (Rs.) *</label>
                         <input type="number" id="price" name="price" class="form-control"
                                step="0.01" min="0" value="{{ old('price', $product->price) }}" required>
                     </div>

@@ -58,6 +58,18 @@ class EnrollmentController extends Controller
             return back()->withErrors(['student_id' => 'This student is already enrolled in this course.'])->withInput();
         }
 
+        $course = Course::withCount('enrollments')->findOrFail($validated['course_id']);
+
+        // Check capacity
+        if ($course->enrollments_count >= $course->max_students) {
+            return back()->withErrors(['course_id' => 'This course has reached its maximum capacity.'])->withInput();
+        }
+
+        // Check deadline
+        if ($course->deadline && $course->deadline->isPast()) {
+            return back()->withErrors(['course_id' => 'The enrollment deadline for this course has passed.'])->withInput();
+        }
+
         Enrollment::create($validated);
 
         return redirect()->route('admin.enrollments.index')
