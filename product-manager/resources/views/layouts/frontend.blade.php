@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('meta_description', 'EduCRM — The premier educational platform for modern learners.')">
-    <title>@yield('title', 'EduCRM — Learn Without Limits')</title>
+    <meta name="description" content="@yield('meta_description', 'Edu — The premier educational platform for modern learners.')">
+    <title>@yield('title', 'Edu — Learn Without Limits')</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -24,6 +24,7 @@
         .nav-brand .brand-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; }
         .nav-brand h1 { font-size: 19px; font-weight: 800; color: var(--text); letter-spacing: -.3px; }
         .nav-links { display: flex; align-items: center; gap: 4px; }
+        .nav-toggle { display: none; background: transparent; border: 1px solid var(--border); border-radius: 8px; width: 38px; height: 38px; align-items: center; justify-content: center; cursor: pointer; color: var(--text); }
         .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; padding: 7px 14px; border-radius: 7px; transition: all .2s; }
         .nav-links a:hover, .nav-links a.active { color: var(--text); background: rgba(0,0,0,.05); }
         .nav-cta { background: linear-gradient(135deg, var(--accent), var(--accent2)) !important; color: #fff !important; padding: 8px 18px !important; font-weight: 600 !important; }
@@ -36,7 +37,7 @@
         .hero-content { position: relative; z-index: 2; max-width: 820px; }
         .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; background: rgba(0,0,0,.04); border: 1px solid rgba(0,0,0,.1); border-radius: 30px; font-size: 12px; font-weight: 600; color: #333; margin-bottom: 28px; }
         .hero-badge i { font-size: 10px; }
-        .hero h1 { font-size: clamp(38px, 6vw, 72px); font-weight: 900; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 20px; background: linear-gradient(135deg, #111827 40%, #6b7280); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 { font-size: clamp(38px, 6vw, 72px); font-weight: 900; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 20px; background: linear-gradient(135deg, #111827 40%, #6b7280); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { font-size: 17px; color: var(--muted); line-height: 1.8; margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; }
         .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .btn-hero { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all .25s; cursor: pointer; border: none; font-family: 'Inter', sans-serif; }
@@ -46,7 +47,7 @@
         .btn-hero-ghost:hover { background: rgba(0,0,0,.06); border-color: rgba(0,0,0,.2); transform: translateY(-2px); }
         .hero-stats { display: flex; justify-content: center; gap: 48px; margin-top: 64px; flex-wrap: wrap; }
         .hero-stat { text-align: center; }
-        .hero-stat-num { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #111, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-stat-num { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #111, #555); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
         /* SECTION */
@@ -172,6 +173,26 @@
         .chatbot-input button { background: var(--accent); color: white; border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform .2s; }
         .chatbot-input button:hover { transform: scale(1.05); }
 
+        @media (max-width: 992px) {
+            .nav { height: 62px; }
+            .nav-toggle { display: inline-flex; }
+            .nav-links {
+                position: fixed;
+                top: 62px;
+                left: 0;
+                right: 0;
+                background: rgba(255,255,255,0.98);
+                border-bottom: 1px solid var(--border);
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px;
+                gap: 8px;
+            }
+            .nav-links.open { display: flex; }
+            .nav-links a { padding: 10px 12px; }
+        }
+
         @media (max-width: 768px) {
             .features-grid { grid-template-columns: 1fr; }
             .hero-stats { gap: 28px; }
@@ -184,9 +205,12 @@
     <nav class="nav">
         <a href="{{ route('home') }}" class="nav-brand">
             <div class="brand-icon"><i class="fas fa-layer-group"></i></div>
-            <h1>PanelPro CRM</h1>
+            <h1>PanelPro</h1>
         </a>
-        <div class="nav-links">
+        <button class="nav-toggle" type="button" onclick="toggleMobileNav()" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="nav-links" id="navLinks">
             <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
             <a href="{{ route('home') }}#about">About Us</a>
             <a href="{{ route('courses') }}" class="{{ request()->routeIs('courses') || request()->routeIs('courses.show') ? 'active' : '' }}">Courses</a>
@@ -208,7 +232,7 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <h2>PanelPro CRM</h2>
+                <h2>PanelPro</h2>
                 <p>Empowering education with modern technology.</p>
             </div>
             <div class="footer-links">
@@ -220,7 +244,7 @@
                 <a onclick="openAuthModal()" style="cursor:pointer;">Login</a>
             </div>
         </div>
-        <div class="footer-bottom">&copy; {{ date('Y') }} PanelPro CRM. All rights reserved.</div>
+        <div class="footer-bottom">&copy; {{ date('Y') }} PanelPro. All rights reserved.</div>
     </footer>
 
     <!-- Auth Modal -->
@@ -230,7 +254,7 @@
             <div class="auth-title">Welcome Back</div>
             <div class="auth-sub">Login to your Student or Admin account</div>
             
-            <form action="{{ route('admin.login') }}" method="POST">
+            <form action="{{ route('admin.login.submit') }}" method="POST">
                 @csrf
                 <input type="email" name="email" class="auth-input" placeholder="Email address" required>
                 <input type="password" name="password" class="auth-input" placeholder="Password" required>
@@ -238,7 +262,7 @@
             </form>
             
             <div class="auth-switch">
-                Don't have an account? <a onclick="alert('Registration flow triggered!')">Sign up</a>
+                Don't have an account? <a href="{{ route('register') }}">Sign up</a>
             </div>
         </div>
     </div>
@@ -285,6 +309,10 @@
             observer.observe(el);
         });
 
+        function toggleMobileNav() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
         // Auth Modal Logic
         function openAuthModal() {
             document.getElementById('authOverlay').classList.add('active');
@@ -313,17 +341,38 @@
             input.value = '';
             body.scrollTop = body.scrollHeight;
 
-            // Fake AI Response
+            // Show typing indicator
+            const typingId = 'typing-' + Date.now();
+            body.innerHTML += `<div class="chat-msg bot" id="${typingId}"><i class="fas fa-ellipsis-h fa-beat"></i> PanelAI is thinking...</div>`;
+            body.scrollTop = body.scrollHeight;
+
+            // Smart AI Response Logic
             setTimeout(() => {
-                let reply = "I'm a simple AI simulation. You asked: " + msg;
-                if(msg.toLowerCase().includes('course')) reply = "You can browse all our available courses in the 'Courses' section from the top navigation menu.";
-                else if(msg.toLowerCase().includes('quiz')) reply = "Try out our offline/online Quiz module from the navigation bar!";
-                else if(msg.toLowerCase().includes('chat')) reply = "Join our Community Group Chat to ask doubts to admins and other students.";
-                else if(msg.toLowerCase().includes('hello') || msg.toLowerCase().includes('hi')) reply = "Hello! How can I assist your learning journey today?";
+                const typingEl = document.getElementById(typingId);
+                if (typingEl) typingEl.remove();
+
+                let reply = "I'm PanelAI, your educational assistant. I'm still learning, but I can help you find courses, navigate the platform, or join the community chat!";
+                const lowMsg = msg.toLowerCase();
+
+                if(lowMsg.includes('course') || lowMsg.includes('learn') || lowMsg.includes('study')) {
+                    reply = "We offer premium courses in Technology, Business, and Design. You can explore our featured programs on the home page or view the full library in the 'Courses' section.";
+                } else if(lowMsg.includes('quiz') || lowMsg.includes('test') || lowMsg.includes('exam')) {
+                    reply = "Ready to test your knowledge? Head over to the Quiz section to take interactive challenges and measure your progress!";
+                } else if(lowMsg.includes('chat') || lowMsg.includes('community') || lowMsg.includes('group')) {
+                    reply = "Join our Community Chat to discuss topics with fellow students and admins. It's the best place to get your doubts cleared!";
+                } else if(lowMsg.includes('hello') || lowMsg.includes('hi') || lowMsg.includes('hey')) {
+                    reply = "Hello there! I'm your PanelPro assistant. How can I help you advance your career today?";
+                } else if(lowMsg.includes('price') || lowMsg.includes('cost') || lowMsg.includes('free')) {
+                    reply = "Many of our introductory courses are completely free! Premium courses are priced competitively to ensure high-quality mentorship.";
+                } else if(lowMsg.includes('help') || lowMsg.includes('support')) {
+                    reply = "If you need technical support, you can use the contact form at the bottom of the page or email us at support@panelpro.com.";
+                } else if(lowMsg.includes('login') || lowMsg.includes('signup') || lowMsg.includes('register')) {
+                    reply = "You can sign up or log in by clicking the 'Login' button in the top navigation bar. It only takes a minute!";
+                }
 
                 body.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
                 body.scrollTop = body.scrollHeight;
-            }, 800);
+            }, 1500);
         }
     </script>
     @yield('scripts')

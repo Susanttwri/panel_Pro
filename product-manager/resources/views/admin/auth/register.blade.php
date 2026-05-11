@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - PanelPro</title>
+    <title>Create Account - PanelPro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -27,45 +27,52 @@
         .error-msg{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#dc2626;display:flex;align-items:center;gap:8px}
         .back-home{display:block;text-align:center;margin-top:16px;color:#6b7280;text-decoration:none;font-size:13px;transition:color .15s}
         .back-home:hover{color:#111827}
-        .demo-creds{margin-top:20px;padding:14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;text-align:center}
-        .demo-creds p{font-size:10px;color:#9ca3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
-        .demo-creds code{display:block;font-size:13px;color:#374151;margin:3px 0}
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="login-icon"><i class="fas fa-shield-halved"></i></div>
-                <h1>Admin Login</h1>
-                <p>Sign in to manage your education platform</p>
+                <div class="login-icon"><i class="fas fa-user-plus"></i></div>
+                <h1>Create Account</h1>
+                <p>Join PanelPro and start your journey</p>
             </div>
             @if($errors->any())
                 <div class="error-msg"><i class="fas fa-exclamation-circle"></i> {{ $errors->first() }}</div>
             @endif
-            <form method="POST" action="{{ route('admin.login.submit') }}">
+            <form method="POST" action="{{ route('register.submit') }}">
                 @csrf
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" value="{{ old('name') }}" required autofocus>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="admin@edu.com" value="{{ old('email') }}" required autofocus>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" value="{{ old('email') }}" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Create a password" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-login">Sign In</button>
+                <div class="form-group">
+                    <label for="password_confirmation">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-check-circle"></i>
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-login">Create Account</button>
             </form>
-            <div class="demo-creds">
-                <p>Demo Credentials</p>
-                <code>Email: admin@edu.com</code>
-                <code>Password: password</code>
-            </div>
+            <a href="{{ route('admin.login') }}" class="back-home">Already have an account? Sign In</a>
             <a href="{{ route('home') }}" class="back-home"><i class="fas fa-arrow-left"></i> Back to Website</a>
         </div>
     </div>
