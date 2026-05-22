@@ -72,7 +72,8 @@
                 </div>
                 <button type="submit" class="btn-login">Create Account</button>
             </form>
-            <a href="{{ route('admin.login') }}" class="back-home">Already have an account? Sign In</a>
+            <a href="{{ route('student.register') }}" class="back-home">Student sign up is here</a>
+            <a href="{{ route('admin.login') }}" class="back-home">Admin sign in</a>
             <a href="{{ route('home') }}" class="back-home"><i class="fas fa-arrow-left"></i> Back to Website</a>
         </div>
     </div>

@@ -40,7 +40,8 @@
         @if($courses->count() > 0)
             <div class="courses-grid">
                 @foreach($courses as $course)
-                    <a href="{{ route('courses.show', $course) }}" class="course-card">
+                    <div class="course-card">
+                        <a href="{{ route('courses.show', $course) }}" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; flex:1;">
                         <div class="course-card-img">
                             @if($course->thumbnail)
                                 <img src="{{ asset('storage/'.$course->thumbnail) }}" alt="{{ $course->title }}">
@@ -83,7 +84,11 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                        </a>
+                        <div style="padding: 0 20px 16px; display:flex; justify-content:flex-end;">
+                            @include('partials.add-to-cart', ['course' => $course])
+                        </div>
+                    </div>
                 @endforeach
             </div>
 

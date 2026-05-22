@@ -12,6 +12,7 @@ class FrontendController extends Controller
     public function home()
     {
         $featuredCourses = Course::with('instructor')
+            ->withCount('enrollments')
             ->where('is_active', true)
             ->where('is_featured', true)
             ->take(6)
@@ -19,6 +20,7 @@ class FrontendController extends Controller
 
         if ($featuredCourses->isEmpty()) {
             $featuredCourses = Course::with('instructor')
+                ->withCount('enrollments')
                 ->where('is_active', true)
                 ->latest()
                 ->take(6)

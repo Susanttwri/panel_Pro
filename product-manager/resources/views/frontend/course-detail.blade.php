@@ -75,9 +75,10 @@
                 </div>
 
                 @php
+                    $cartService = app(\App\Services\CartService::class);
+                    $canEnroll = $cartService->canPurchase($course);
                     $isFull = $course->enrollments->count() >= $course->max_students;
                     $deadlinePassed = $course->deadline && $course->deadline->isPast();
-                    $canEnroll = !$isFull && !$deadlinePassed;
                 @endphp
 
                 @if($isFull)
@@ -96,16 +97,21 @@
                     </div>
                 @endif
 
-                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
                     @if($canEnroll)
-                        <a href="{{ route('admin.enrollments.create') }}?course_id={{ $course->id }}" class="btn-hero btn-hero-primary">
-                            <i class="fas fa-graduation-cap"></i> Enroll Now
-                        </a>
+                        @include('partials.add-to-cart', ['course' => $course])
                     @else
                         <button class="btn-hero btn-hero-primary" style="opacity: 0.5; cursor: not-allowed;" disabled>
                             <i class="fas fa-ban"></i> Enrollment Closed
                         </button>
                     @endif
+                    @auth
+                        @if(auth()->user()->isStudent())
+                            <a href="{{ route('student.cart.index') }}" class="btn-hero btn-hero-ghost">
+                                <i class="fas fa-shopping-cart"></i> View Cart
+                            </a>
+                        @endif
+                    @endauth
                     <a href="{{ route('courses') }}" class="btn-hero btn-hero-ghost">
                         <i class="fas fa-arrow-left"></i> Back to Courses
                     </a>

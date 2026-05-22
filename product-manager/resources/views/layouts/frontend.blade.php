@@ -29,6 +29,11 @@
         .nav-links a:hover, .nav-links a.active { color: var(--text); background: rgba(0,0,0,.05); }
         .nav-cta { background: linear-gradient(135deg, var(--accent), var(--accent2)) !important; color: #fff !important; padding: 8px 18px !important; font-weight: 600 !important; }
         .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.2); background: linear-gradient(135deg, #222, #444) !important; }
+        .nav-cart { position: relative; }
+        .nav-cart-badge { position: absolute; top: 2px; right: 4px; min-width: 18px; height: 18px; padding: 0 5px; background: var(--orange); color: #fff; font-size: 10px; font-weight: 700; border-radius: 999px; display: flex; align-items: center; justify-content: center; }
+        .cart-toast { position: fixed; top: 84px; right: 20px; z-index: 1100; max-width: 360px; padding: 14px 18px; border-radius: 10px; font-size: 14px; box-shadow: 0 10px 40px rgba(0,0,0,.12); animation: fadeInUp .4s ease; }
+        .cart-toast.success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+        .cart-toast.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
 
         /* HERO */
         .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; padding: 100px 5% 60px; overflow: hidden; }
@@ -217,14 +222,30 @@
             <a href="{{ route('instructors') }}" class="{{ request()->routeIs('instructors') ? 'active' : '' }}">Instructors</a>
             <a href="{{ url('chat') }}" class="{{ request()->is('chat') ? 'active' : '' }}">Community Chat</a>
             <a href="{{ url('quiz') }}" class="{{ request()->is('quiz') ? 'active' : '' }}">Quiz</a>
-            <a href="{{ route('home') }}#contact" class="nav-cta" style="background: transparent !important; color: #000 !important; border: 1px solid #ccc; margin-right: 8px;">Contact Us</a>
             @auth
-                <a href="{{ route('admin.dashboard') }}" class="nav-cta"><i class="fas fa-th-large"></i> Dashboard</a>
+                @if(auth()->user()->isStudent())
+                    <a href="{{ route('student.cart.index') }}" class="nav-cart {{ request()->routeIs('student.cart.*') ? 'active' : '' }}">
+                        <i class="fas fa-shopping-cart"></i> Cart
+                        @if(($cartCount ?? 0) > 0)<span class="nav-cart-badge">{{ $cartCount }}</span>@endif
+                    </a>
+                    <a href="{{ route('student.dashboard') }}" class="nav-cta"><i class="fas fa-graduation-cap"></i> My Learning</a>
+                @else
+                    <a href="{{ route('admin.dashboard') }}" class="nav-cta"><i class="fas fa-th-large"></i> Dashboard</a>
+                @endif
             @else
-                <a onclick="openAuthModal()" class="nav-cta" style="cursor:pointer;"><i class="fas fa-user-circle"></i> Login</a>
+                <a href="{{ route('student.login') }}" class="nav-cta" style="margin-right:8px;"><i class="fas fa-user-circle"></i> Student Login</a>
+                <a href="{{ route('student.register') }}" class="nav-cta" style="background:transparent !important; color:#000 !important; border:1px solid #ccc;">Sign Up</a>
             @endauth
+            <a href="{{ route('home') }}#contact" class="nav-cta" style="background: transparent !important; color: #000 !important; border: 1px solid #ccc; margin-right: 8px;">Contact Us</a>
         </div>
     </nav>
+
+    @if(session('cart_success'))
+        <div class="cart-toast success" id="cartToast"><i class="fas fa-check-circle"></i> {{ session('cart_success') }}</div>
+    @endif
+    @if(session('cart_error'))
+        <div class="cart-toast error" id="cartToast"><i class="fas fa-exclamation-circle"></i> {{ session('cart_error') }}</div>
+    @endif
 
     @yield('content')
 
@@ -254,15 +275,16 @@
             <div class="auth-title">Welcome Back</div>
             <div class="auth-sub">Login to your Student or Admin account</div>
             
-            <form action="{{ route('admin.login.submit') }}" method="POST">
+            <form action="{{ route('student.login.submit') }}" method="POST">
                 @csrf
                 <input type="email" name="email" class="auth-input" placeholder="Email address" required>
                 <input type="password" name="password" class="auth-input" placeholder="Password" required>
-                <button type="submit" class="auth-submit">Login Securely</button>
+                <button type="submit" class="auth-submit">Student Login</button>
             </form>
             
             <div class="auth-switch">
-                Don't have an account? <a href="{{ route('register') }}">Sign up</a>
+                Don't have an account? <a href="{{ route('student.register') }}">Student sign up</a> ·
+                <a href="{{ route('admin.login') }}">Admin login</a>
             </div>
         </div>
     </div>
@@ -292,6 +314,22 @@
     </div>
 
     <script>
+        (function () {
+            const toast = document.getElementById('cartToast');
+            if (!toast) return;
+            setTimeout(function () {
+                toast.style.transition = 'opacity .4s ease';
+                toast.style.opacity = '0';
+                setTimeout(function () { toast.remove(); }, 400);
+            }, 5000);
+        })();
+
+        @if(request('login') || session('open_login'))
+            document.addEventListener('DOMContentLoaded', function () {
+                if (typeof openAuthModal === 'function') openAuthModal();
+            });
+        @endif
+
         // Intersection observer for animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

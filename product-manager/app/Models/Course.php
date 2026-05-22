@@ -47,4 +47,9 @@ class Course extends Model
     {
         return $this->belongsToMany(Student::class, 'enrollments');
     }
+
+    public function quizQuestions()
+    {
+        return $this->hasMany(QuizQuestion::class)->orderBy('sort_order');
+    }
 }

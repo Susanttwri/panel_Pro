@@ -16,13 +16,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Admin user
-        User::firstOrCreate(
+        $admin = User::firstOrCreate(
             ['email' => 'admin@edu.com'],
             [
                 'name'     => 'Admin',
                 'password' => Hash::make('password'),
+                'role'     => 'admin',
             ]
         );
+        $admin->update(['role' => 'admin']);
 
         // Instructors
         $instructors = [
@@ -130,5 +132,7 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+
+        $this->call(QuizSeeder::class);
     }
 }

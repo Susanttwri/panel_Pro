@@ -28,7 +28,10 @@
     .creative-section.alt { flex-direction: row-reverse; }
     .cs-content { flex: 1; min-width: 300px; }
     .cs-image { flex: 1; min-width: 300px; height: 400px; background: #f8f9fa; border-radius: 30px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #eaeaea; }
-    .cs-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(0,0,0,0.03)); }
+    .cs-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cs-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%); pointer-events: none; z-index: 1; }
+    .cs-image-caption { position: absolute; bottom: 24px; left: 24px; right: 24px; z-index: 2; color: #fff; font-size: clamp(20px, 3vw, 28px); font-weight: 900; letter-spacing: -0.5px; line-height: 1.2; }
+    .cs-image-badge { position: absolute; top: 20px; left: 20px; z-index: 2; background: rgba(255,255,255,0.95); color: #111; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 8px 14px; border-radius: 999px; }
     .cs-title { font-size: 40px; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
     .cs-desc { font-size: 16px; color: #666; line-height: 1.8; margin-bottom: 30px; }
 
@@ -42,7 +45,7 @@
     .mc-header { text-align: center; margin-bottom: 60px; }
     .mc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; }
     
-    .mc-card { background: #fff; border-radius: 20px; padding: 32px; border: 1px solid #f0f0f0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; text-decoration: none; color: inherit; position: relative; overflow: hidden; }
+    .mc-card { background: #fff; border-radius: 20px; padding: 32px; border: 1px solid #f0f0f0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; color: inherit; position: relative; overflow: hidden; }
     .mc-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #000; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
     .mc-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.08); border-color: transparent; }
     .mc-card:hover::before { transform: scaleX(1); }
@@ -119,8 +122,9 @@
             <a href="{{ route('courses') }}" class="btn-hero btn-hero-ghost" style="border-radius: 30px;"><i class="fas fa-info-circle"></i> Discover More</a>
         </div>
         <div class="cs-image">
-            <i class="fas fa-layer-group floating" style="font-size: 100px; color: #000; opacity: 0.1; position: absolute;"></i>
-            <h3 style="font-size: 28px; font-weight: 900; z-index: 2;" class="floating">Innovation in EdTech.</h3>
+            <img src="{{ asset('images/edtech-innovation.jpg') }}" alt="Students collaborating in a modern EdTech learning environment" loading="lazy">
+            <span class="cs-image-badge"><i class="fas fa-graduation-cap"></i> EdTech</span>
+            <p class="cs-image-caption">Innovation in EdTech.</p>
         </div>
     </section>
 
@@ -134,7 +138,8 @@
         @if($featuredCourses->count() > 0)
             <div class="mc-grid">
                 @foreach($featuredCourses as $course)
-                    <a href="{{ route('courses.show', $course) }}" class="mc-card">
+                    <div class="mc-card">
+                        <a href="{{ route('courses.show', $course) }}" style="text-decoration:none; color:inherit; flex:1; display:flex; flex-direction:column;">
                         <div class="mc-icon">
                             @if($course->category == 'Technology' || $course->category == 'Programming')
                                 <i class="fas fa-laptop-code"></i>
@@ -167,7 +172,11 @@
                                 <i class="fas fa-clock"></i> {{ $course->duration_hours }}h
                             </div>
                         </div>
-                    </a>
+                        </a>
+                        <div style="margin-top: 16px; display:flex; justify-content:flex-end;">
+                            @include('partials.add-to-cart', ['course' => $course])
+                        </div>
+                    </div>
                 @endforeach
             </div>
         @else
